@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lightcast | Portfolio AI Opportunity & Workforce Intelligence Dashboard</title>
+<style>
+  :root {
+    --bg: #f5f7fb;
+    --panel: #ffffff;
+    --text: #0f172a;
+    --muted: #64748b;
+    --line: #e2e8f0;
+    --blue: #2563eb;
+    --blue2: #3b82f6;
+    --green: #059669;
+    --amber: #d97706;
+    --red: #dc2626;
+    --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    --radius: 18px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: linear-gradient(180deg, #eef4ff 0%, var(--bg) 22%, var(--bg) 100%);
+    color: var(--text);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  .wrap {
+    max-width: 1480px;
+    margin: 0 auto;
+    padding: 24px;
+  }
+  .hero {
+    background: linear-gradient(135deg, #0f172a 0%, #1d4ed8 100%);
+    color: #fff;
+    border-radius: 24px;
+    padding: 26px 28px;
+    box-shadow: var(--shadow);
+  }
+  .hero-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .eyebrow {
+    font-size: 12px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    opacity: .9;
+    margin-bottom: 8px;
+  }
+  h1 {
+    margin: 0;
+    font-size: 30px;
+    line-height: 1.12;
+  }
+  .hero p {
+    margin: 10px 0 0;
+    max-width: 980px;
+    color: rgba(255,255,255,.88);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.18);
+    border-radius: 999px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: rgba(255,255,255,.95);
+    white-space: nowrap;
+  }
+  .grid {
+    display: grid;
+    gap: 16px;
+    margin-top: 18px;
+  }
+  .filters {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 18px;
+    box-shadow: var(--shadow);
+  }
+  .filter label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: #334155;
+    margin-bottom: 8px;
+  }
+  select {
+    width: 100%;
+    border: 1px solid var(--line);
+    background: #fbfdff;
+    color: var(--text);
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: 14px;
+    outline: none;
+  }
+  select:focus {
+    border-color: #93c5fd;
+    box-shadow: 0 0 0 4px rgba(37,99,235,.08);
+  }
+  .kpis {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+  .kpi {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 18px;
+    box-shadow: var(--shadow);
+  }
+  .kpi .label {
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+  }
+  .kpi .value {
+    font-size: 28px;
+    font-weight: 800;
+    margin: 10px 0 4px;
+  }
+  .kpi .sub {
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .two-col {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .panel-header {
+    padding: 18px 20px 10px;
+    border-bottom: 1px solid var(--line);
+  }
+  .panel-header h2 {
+    margin: 0;
+    font-size: 18px;
+  }
+  .panel-header .desc {
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+  .panel-body {
+    padding: 18px 20px 20px;
+  }
+  .bars {
+    display: grid;
+    gap: 12px;
+  }
+  .bar-row {
+    display: grid;
+    grid-template-columns: 150px 1fr 64px;
+    align-items: center;
+    gap: 10px;
+  }
+  .bar-label {
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .bar-track {
+    position: relative;
+    height: 12px;
+    border-radius: 999px;
+    background: #eaf0ff;
+    overflow: hidden;
+  }
+  .bar-fill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--blue), #8b5cf6);
+  }
+  .bar-fill.risk {
+    background: linear-gradient(90deg, var(--amber), var(--red));
+  }
+  .bar-value {
+    text-align: right;
+    font-size: 13px;
+    color: var(--text);
+    font-weight: 700;
+  }
+  .table-wrap {
+    overflow: auto;
+    max-height: 690px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 860px;
+  }
+  thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: #f8fafc;
+    border-bottom: 1px solid var(--line);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--muted);
+    text-align: left;
+    padding: 14px 12px;
+  }
+  tbody td {
+    border-bottom: 1px solid #edf2f7;
+    padding: 14px 12px;
+    font-size: 13px;
+    vertical-align: top;
+  }
+  tbody tr {
+    cursor: pointer;
+    transition: background .15s ease;
+  }
+  tbody tr:hover {
+    background: #f8fbff;
+  }
+  tbody tr.selected {
+    background: #eff6ff;
+  }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .pill.blue { background: #dbeafe; color: #1d4ed8; }
+  .pill.green { background: #dcfce7; color: #15803d; }
+  .pill.amber { background: #fef3c7; color: #b45309; }
+  .pill.red { background: #fee2e2; color: #b91c1c; }
+  .detail-grid {
+    display: grid;
+    gap: 14px;
+  }
+  .detail-title {
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .detail-title h3 {
+    margin: 0;
+    font-size: 22px;
+    line-height: 1.2;
+  }
+  .detail-title .meta {
+    margin-top: 6px;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .mini-kpis {
+    display:grid;
+    grid-template-columns: repeat(4, minmax(0,1fr));
+    gap: 10px;
+  }
+  .mini {
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 12px;
+    background: #fbfdff;
+  }
+  .mini .l {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--muted);
+  }
+  .mini .v {
+    font-size: 20px;
+    font-weight: 800;
+    margin-top: 8px;
+  }
+  .task-table {
+    min-width: 0;
+    width: 100%;
+  }
+  .task-table th, .task-table td {
+    padding: 12px 10px;
+  }
+  .skill-tags {
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+  }
+  .skill-tags span {
+    background:#eef2ff;
+    color:#3730a3;
+    border-radius:999px;
+    padding:5px 8px;
+    font-size:11px;
+    font-weight:600;
+  }
+  .impact {
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .impact .meter {
+    width: 100%;
+    max-width: 180px;
+    height: 8px;
+    border-radius:999px;
+    background:#e5e7eb;
+    overflow:hidden;
+  }
+  .impact .meter > span {
+    display:block;
+    height:100%;
+    border-radius:999px;
+    background: linear-gradient(90deg, #2563eb, #10b981);
+  }
+  .footer-note {
+    font-size: 12px;
+    color: var(--muted);
+    padding: 14px 2px 0;
+    line-height: 1.6;
+  }
+  .subtitle {
+    font-size: 13px;
+    color: var(--muted);
+  }
+  @media (max-width: 1200px) {
+    .filters, .kpis, .two-col, .mini-kpis { grid-template-columns: 1fr; }
+    .bar-row { grid-template-columns: 1fr; gap: 6px; }
+    .bar-value { text-align: left; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <div class="hero-top">
+      <div>
+        <div class="eyebrow">Lightcast | Illustrative Output</div>
+        <h1>Portfolio AI Opportunity & Workforce Intelligence Dashboard</h1>
+        <p>
+          This sample dashboard illustrates how AI opportunity and workforce risk insights can be explored across the portfolio.
+          Users can filter by company, industry, function, and role, view role-level AI opportunity, risk, and time-savings metrics,
+          and drill into the underlying tasks that drive each role's AI impact assessment.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="grid filters">
+    <div class="filter">
+      <label for="companyFilter">Company</label>
+      <select id="companyFilter"></select>
+    </div>
+    <div class="filter">
+      <label for="industryFilter">Industry</label>
+      <select id="industryFilter"></select>
+    </div>
+    <div class="filter">
+      <label for="functionFilter">Function</label>
+      <select id="functionFilter"></select>
+    </div>
+    <div class="filter">
+      <label for="roleFilter">Role</label>
+      <select id="roleFilter"></select>
+    </div>
+  </section>
+
+  <section class="grid kpis" id="kpiGrid"></section>
+
+  <section class="grid two-col">
+    <div class="panel">
+      <div class="panel-header">
+        <h2>Portfolio View</h2>
+        <div class="desc">Companies and functions ranked by weighted AI opportunity and risk for the filtered portfolio view.</div>
+      </div>
+      <div class="panel-body">
+        <div class="grid" style="grid-template-columns: 1fr; gap: 18px;">
+          <div>
+            <div class="subtitle" style="margin-bottom:10px;"><strong>AI Opportunity by Company</strong></div>
+            <div class="bars" id="companyOpportunityBars"></div>
+          </div>
+          <div>
+            <div class="subtitle" style="margin-bottom:10px;"><strong>AI Risk by Function</strong></div>
+            <div class="bars" id="functionRiskBars"></div>
+          </div>
+        </div>
+        <div style="margin-top:18px;">
+          <div class="subtitle" style="margin-bottom:10px;"><strong>Role-Level Output</strong> — click any row to see the task drill-down.</div>
+          <div class="table-wrap">
+            <table id="roleTable">
+              <thead>
+                <tr>
+                  <th>Role</th>
+                  <th>Company</th>
+                  <th>Industry</th>
+                  <th>Function</th>
+                  <th>Headcount</th>
+                  <th>Opportunity</th>
+                  <th>Risk</th>
+                  <th>Weighted Time Savings</th>
+                  <th>Tasks</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-header">
+        <h2>Selected Role Drill-Down</h2>
+        <div class="desc">Role summary metrics and task-level detail, including time-savings, AI exposure, and skill mappings.</div>
+      </div>
+      <div class="panel-body detail-grid" id="detailPanel"></div>
+    </div>
+  </section>
+
+  <div class="footer-note">
+    <strong>Sample note:</strong> This is a presentation mock-up intended to show the structure of the deliverable.
+    The underlying data can be replaced with anonymized portfolio data, while keeping the same filter, role, and task drill-down experience.
+  </div>
+</div>
+
+<script>
+const portfolioData = [{"role_id": "R06", "company": "Orion Health Systems", "industry": "Healthcare", "geography": "North America", "role": "Data Analytics Manager", "function": "Analytics & BI", "headcount": 168, "number_of_tasks": 4, "avg_time_allocation_per_task": 1.7, "avg_task_variability": 5.62, "avg_complexity": 5.6, "avg_creativity": 4.05, "avg_interpersonal": 6.65, "avg_physical": 1.5, "avg_lower_pct_saved": 0.18, "avg_mid_pct_saved": 0.255, "avg_upper_pct_saved": 0.334, "total_ai_enabled_time_savings": 1.75, "ai_enablement_potential": 0.257, "opportunity_score": 46.7, "risk_score": 47.7, "tasks": [{"Task": "Collect and validate data inputs from multiple sources", "Task Category": "Data Analysis & Insights", "Task Subcategory": "Data Management", "Time Allocation": 2.2, "Task Variability": 6.3, "Complexity Requirements": 7.6, "Creativity Requirements": 2.4, "Interpersonal Requirements": 5.6, "Physical Requirements": 1.9, "AI Exposure": "High", "Lower % Time Saved By AI": 0.209, "Mid % Time Saved By AI": 0.277, "Upper % Time Saved By AI": 0.351, "AI-Enabled Time Savings": 0.609, "Skill Mapping": "Data Validation; Data Governance"}, {"Task": "Build recurring dashboards and self-service reports", "Task Category": "Reporting, Documentation & Knowledge Management", "Task Subcategory": "Reporting", "Time Allocation": 1.4, "Task Variability": 6.9, "Complexity Requirements": 5.5, "Creativity Requirements": 5.6, "Interpersonal Requirements": 7.3, "Physical Requirements": 1.4, "AI Exposure": "High", "Lower % Time Saved By AI": 0.143, "Mid % Time Saved By AI": 0.22, "Upper % Time Saved By AI": 0.306, "AI-Enabled Time Savings": 0.308, "Skill Mapping": "Dashboarding; BI Development"}, {"Task": "Analyze trends, anomalies, and performance drivers", "Task Category": "Data Analysis & Insights", "Task Subcategory": "Insight Generation", "Time Allocation": 1.4, "Task Variability": 3.6, "Complexity Requirements": 4.7, "Creativity Requirements": 6.1, "Interpersonal Requirements": 6.4, "Physical Requirements": 1.1, "AI Exposure": "High", "Lower % Time Saved By AI": 0.205, "Mid % Time Saved By AI": 0.284, "Upper % Time Saved By AI": 0.367, "AI-Enabled Time Savings": 0.398, "Skill Mapping": "Pattern Recognition; Statistical Analysis"}, {"Task": "Share findings and recommendations with stakeholders", "Task Category": "Communication & Stakeholder Management", "Task Subcategory": "Insight Communication", "Time Allocation": 1.8, "Task Variability": 5.7, "Complexity Requirements": 4.6, "Creativity Requirements": 2.1, "Interpersonal Requirements": 7.3, "Physical Requirements": 1.6, "AI Exposure": "High", "Lower % Time Saved By AI": 0.162, "Mid % Time Saved By AI": 0.239, "Upper % Time Saved By AI": 0.311, "AI-Enabled Time Savings": 0.43, "Skill Mapping": "Executive Communication; Storytelling"}]}, {"role_id": "R14", "company": "Harbor Financial Services", "industry": "Financial Services", "geography": "APAC", "role": "Business Intelligence Lead", "function": "Data & Insights", "headcount": 273, "number_of_tasks": 4, "avg_time_allocation_per_task": 1.95, "avg_task_variability": 4.7, "avg_complexity": 5.55, "avg_creativity": 3.77, "avg_interpersonal": 4.72, "avg_physical": 1.43, "avg_lower_pct_saved": 0.171, "avg_mid_pct_saved": 0.245, "avg_upper_pct_saved": 0.324, "total_ai_enabled_time_savings": 1.85, "ai_enablement_potential": 0.238, "opportunity_score": 47.8, "risk_score": 46.5, "tasks": [{"Task": "Define KPI logic and reporting standards", "Task Category": "Reporting, Documentation & Knowledge Management", "Task Subcategory": "Reporting", "Time Allocation": 1.2, "Task Variability": 4.1, "Complexity Requirements": 6.2, "Creativity Requirements": 5.2, "Interpersonal Requirements": 3.6, "Physical Requirements": 1.5, "AI Exposure": "High", "Lower % Time Saved By AI": 0.195, "Mid % Time Saved By AI": 0.275, "Upper % Time Saved By AI": 0.352, "AI-Enabled Time Savings": 0.33, "Skill Mapping": "KPI Definition; Data Governance"}, {"Task": "Build dashboards and executive scorecards", "Task Category": "Reporting, Documentation & Knowledge Management", "Task Subcategory": "Reporting", "Time Allocation": 1.7, "Task Variability": 3.4, "Complexity Requirements": 6.1, "Creativity Requirements": 3.3, "Interpersonal Requirements": 2.4, "Physical Requirements": 1.5, "AI Exposure": "High", "Lower % Time Saved By AI": 0.229, "Mid % Time Saved By AI": 0.309, "Upper % Time Saved By AI": 0.378, "AI-Enabled Time Savings": 0.525, "Skill Mapping": "Dashboarding; BI Development"}, {"Task": "Analyze business performance and trends", "Task Category": "Data Analysis & Insights", "Task Subcategory": "Insight Generation", "Time Allocation": 3.2, "Task Variability": 7.7, "Complexity Requirements": 4.3, "Creativity Requirements": 2.4, "Interpersonal Requirements": 6.1, "Physical Requirements": 1.3, "AI Exposure": "High", "Lower % Time Saved By AI": 0.154, "Mid % Time Saved By AI": 0.214, "Upper % Time Saved By AI": 0.296, "AI-Enabled Time Savings": 0.685, "Skill Mapping": "Trend Analysis; Storytelling"}, {"Task": "Guide self-service reporting and adoption", "Task Category": "Process Improvement & Change", "Task Subcategory": "Enablement", "Time Allocation": 1.7, "Task Variability": 3.6, "Complexity Requirements": 5.6, "Creativity Requirements": 4.2, "Interpersonal Requirements": 6.8, "Physical Requirements": 1.4, "AI Exposure": "Medium", "Lower % Time Saved By AI": 0.107, "Mid % Time Saved By AI": 0.184, "Upper % Time Saved By AI": 0.268, "AI-Enabled Time Savings": 0.313, "Skill Mapping": "Adoption Planning; Change Management"}]}, {"role_id": "R12", "company": "Apex Retail Group", "industry": "Retail & eCommerce", "geography": "Europe", "role": "Product Program Manager", "function": "Program Management", "headcount": 244, "number_of_tasks": 4, "avg_time_allocation_per_task": 2.27, "avg_task_variability": 5.03, "avg_complexity": 7.1, "avg_creativity": 4.97, "avg_interpersonal": 4.22, "avg_physical": 1.55, "avg_lower_pct_saved": 0.212, "avg_mid_pct_saved": 0.262, "avg_upper_pct_saved": 0.337, "total_ai_enabled_time_savings": 2.46, "ai_enablement_potential": 0.27, "opportunity_score": 53.6, "risk_score": 50.2, "tasks": [{"Task": "Prioritize roadmap items and delivery milestones", "Task Category": "Strategy & Business Planning", "Task Subcategory": "Strategic Planning", "Time Allocation": 1.6, "Task Variability": 3.4, "Complexity Requirements": 5.8, "Creativity Requirements": 2.2, "Interpersonal Requirements": 2.1, "Physical Requirements": 1.3, "AI Exposure": "Medium", "Lower % Time Saved By AI": 0.136, "Mid % Time Saved By AI": 0.195, "Upper % Time Saved By AI": 0.271, "AI-Enabled Time Savings": 0.312, "Skill Mapping": "Roadmapping; Prioritization"}, {"Task": "Coordinate cross-functional delivery dependencies", "Task Category": "Operations & Execution", "Task Subcategory": "Workflow Management", "Time Allocation": 2.8, "Task Variability": 6.3, "Complexity Requirements": 7.2, "Creativity Requirements": 6.0, "Interpersonal Requirements": 4.1, "Physical Requirements": 1.3, "AI Exposure": "High", "Lower % Time Saved By AI": 0.271, "Mid % Time Saved By AI": 0.308, "Upper % Time Saved By AI": 0.394, "AI-Enabled Time Savings": 0.862, "Skill Mapping": "Program Management; Coordination"}, {"Task": "Track risks, decisions, and action items", "Task Category": "Reporting, Documentation & Knowledge Management", "Task Subcategory": "Tracking", "Time Allocation": 2.5, "Task Variability": 3.2, "Complexity Requirements": 7.8, "Creativity Requirements": 6.0, "Interpersonal Requirements": 5.5, "Physical Requirements": 1.7, "AI Exposure": "High", "Lower % Time Saved By AI": 0.245, "Mid % Time Saved By AI": 0.282, "Upper % Time Saved By AI": 0.358, "AI-Enabled Time Savings": 0.705, "Skill Mapping": "Risk Tracking; Decision Management"}, {"Task": "Communicate progress and trade-offs to leadership", "Task Category": "Communication & Stakeholder Management", "Task Subcategory": "Executive Alignment", "Time Allocation": 2.2, "Task Variability": 7.2, "Complexity Requirements": 7.6, "Creativity Requirements": 5.7, "Interpersonal Requirements": 5.2, "Physical Requirements": 1.9, "AI Exposure": "High", "Lower % Time Saved By AI": 0.197, "Mid % Time Saved By AI": 0.262, "Upper % Time Saved By AI": 0.323, "AI-Enabled Time Savings": 0.576, "Skill Mapping": "Executive Communication; Storytelling"}]}, {"role_id": "R08", "company": "Meridian Industrial Solutions", "industry": "Industrials", "geography": "EMEA", "role": "Continuous Improvement Manager", "function": "Operations Excellence", "headcount": 275, "number_of_tasks": 4, "avg_time_allocation_per_task": 2.38, "avg_task_variability": 5.15, "avg_complexity": 6.9, "avg_creativity": 4.05, "avg_interpersonal": 4.95, "avg_physical": 1.8, "avg_lower_pct_saved": 0.151, "avg_mid_pct_saved": 0.197, "avg_upper_pct_saved": 0.281, "total_ai_enabled_time_savings": 1.86, "ai_enablement_potential": 0.196, "opportunity_score": 38.6, "risk_score": 39.9, "tasks": [{"Task": "Review process performance and identify waste", "Task Category": "Process Improvement & Change", "Task Subcategory": "Continuous Improvement", "Time Allocation": 2.1, "Task Variability": 6.1, "Complexity Requirements": 6.3, "Creativity Requirements": 4.3, "Interpersonal Requirements": 5.8, "Physical Requirements": 1.5, "AI Exposure": "Medium", "Lower % Time Saved By AI": 0.125, "Mid % Time Saved By AI": 0.179, "Upper % Time Saved By AI": 0.276, "AI-Enabled Time Savings": 0.376, "Skill Mapping": "Lean Improvement; Process Analysis"}, {"Task": "Design and track improvement initiatives", "Task Category": "Process Improvement & Change", "Task Subcategory": "Initiative Management", "Time Allocation": 2.7, "Task Variability": 7.4, "Complexity Requirements": 8.2, "Creativity Requirements": 3.2, "Interpersonal Requirements": 5.1, "Physical Requirements": 1.9, "AI Exposure": "High", "Lower % Time Saved By AI": 0.182, "Mid % Time Saved By AI": 0.219, "Upper % Time Saved By AI": 0.275, "AI-Enabled Time Savings": 0.591, "Skill Mapping": "Project Management; Change Management"}, {"Task": "Coordinate cross-functional problem-solving workshops", "Task Category": "Communication & Stakeholder Management", "Task Subcategory": "Facilitation", "Time Allocation": 2.1, "Task Variability": 3.4, "Complexity Requirements": 5.1, "Creativity Requirements": 2.3, "Interpersonal Requirements": 5.7, "Physical Requirements": 1.8, "AI Exposure": "High", "Lower % Time Saved By AI": 0.189, "Mid % Time Saved By AI": 0.227, "Upper % Time Saved By AI": 0.313, "AI-Enabled Time Savings": 0.477, "Skill Mapping": "Facilitation; Stakeholder Alignment"}, {"Task": "Measure impact and sustain standard work", "Task Category": "Reporting, Documentation & Knowledge Management", "Task Subcategory": "Performance Tracking", "Time Allocation": 2.6, "Task Variability": 3.7, "Complexity Requirements": 8.0, "Creativity Requirements": 6.4, "Interpersonal Requirements": 3.2, "Physical Requirements": 2.0, "AI Exposure": "Medium", "Lower % Time Saved By AI": 0.108, "Mid % Time Saved By AI": 0.162, "Upper % Time Saved By AI": 0.261, "AI-Enabled Time Savings": 0.421, "Skill Mapping": "Metrics Tracking; Standard Work"}]}, {"role_id": "R13", "company": "Harbor Financial Services", "industry": "Financial Services", "geography": "APAC", "role": "Strategy & Planning Lead", "function": "Corporate Strategy", "headcount": 404, "number_of_tasks": 4, "avg_time_allocation_per_task": 1.8, "avg_task_variability": 6.4, "avg_complexity": 5.97, "avg_creativity": 3.55, "avg_interpersonal": 3.83, "avg_physical": 1.68, "avg_lower_pct_saved": 0.153, "avg_mid_pct_saved": 0.216, "avg_upper_pct_saved": 0.287, "total_ai_enabled_time_savings": 1.49, "ai_enablement_potential": 0.207, "opportunity_score": 38.1, "risk_score": 37.2, "tasks": [{"Task": "Evaluate market trends and competitive positioning", "Task Category": "Strategy & Business Planning", "Task Subcategory": "Enterprise Strategy", "Time Allocation": 3.3, "Task Variability": 4.9, "Complexity Requirements": 6.0, "Creativity Requirements": 2.2, "Interpersonal Requirements": 2.1, "Physical Requirements": 1.5, "AI Exposure": "Medium", "Lower % Time Saved By AI": 0.154, "Mid % Time Saved By AI": 0.197, "Upper % Time Saved By AI": 0.27, "AI-Enabled Time Savings": 0.65, "Skill Mapping": "Market Analysis; Strategic Thinking"}, {"Task": "Develop scenarios and investment recommendations", "Task Category": "Strategy & Business Planning", "Task Subcategory": "Forecasting & Scenario Planning", "Time Allocation": 1.2, "Task Variability": 7.7, "Complexity Requirements": 8.0, "Creativity Requirements": 2.4, "Interpersonal Requirements": 4.9, "Physical Requirements": 1.7, "AI Exposure": "High", "Lower % Time Saved By AI": 0.161, "Mid % Time Saved By AI": 0.231, "Upper % Time Saved By AI": 0.323, "AI-Enabled Time Savings": 0.277, "Skill Mapping": "Scenario Analysis; Business Modeling"}, {"Task": "Align priorities across functions and stakeholders", "Task Category": "Communication & Stakeholder Management", "Task Subcategory": "Stakeholder Alignment", "Time Allocation": 1.6, "Task Variability": 6.8, "Complexity Requirements": 5.0, "Creativity Requirements": 4.9, "Interpersonal Requirements": 4.5, "Physical Requirements": 1.8, "AI Exposure": "Medium", "Lower % Time Saved By AI": 0.096, "Mid % Time Saved By AI": 0.172, "Upper % Time Saved By AI": 0.236, "AI-Enabled Time Savings": 0.275, "Skill Mapping": "Stakeholder Communication; Influence"}, {"Task": "Translate strategy into operating plans and milestones", "Task Category": "Strategy & Business Planning", "Task Subcategory": "Strategic Planning", "Time Allocation": 1.1, "Task Variability": 6.2, "Complexity Requirements": 4.9, "Creativity Requirements": 4.7, "Interpersonal Requirements": 3.8, "Physical Requirements": 1.7, "AI Exposure": "High", "Lower % Time Saved By AI": 0.203, "Mid % Time Saved By AI": 0.264, "Upper % Time Saved By AI": 0.321, "AI-Enabled Time Savings": 0.29, "Skill Mapping": "Roadmapping; Operating Model Design"}]}, {"role_id": "R10", "company": "Apex Retail Group", "industry": "Retail & eCommerce", "geography": "Europe", "role": "Sales Operations Manager", "function": "Commercial Operations", "headcount": 412, "number_of_tasks": 4, "avg_time_allocation_per_task": 1.9, "avg_task_variability": 5.3, "avg_complexity": 5.45, "avg_creativity": 4.35, "avg_interpersonal": 3.48, "avg_physical": 1.3, "avg_lower_pct_saved": 0.162, "avg_mid_pct_saved": 0.214, "avg_upper_pct_saved": 0.291, "total_ai_enabled_time_savings": 1.61, "ai_enablement_potential": 0.212, "opportunity_score": 37.5, "risk_score": 43.0, "tasks": [{"Task": "Maintain pipeline reporting and forecast hygiene", "Task Category": "Reporting, Documentation & Knowledge Management", "Task Subcategory": "Reporting", "Time Allocation": 1.2, "Task Variability": 7.3, "Complexity Requirements": 4.3, "Creativity Requirements": 5.9, "Interpersonal Requirements": 4.5, "Physical Requirements": 1.3, "AI Exposure": "High", "Lower % Time Saved By AI": 0.167, "Mid % Time Saved By AI": 0.243, "Upper % Time Saved By AI": 0.306, "AI-Enabled Time Savings": 0.292, "Skill Mapping": "Sales Analytics; Forecasting"}, {"Task": "Analyze funnel conversion and rep performance", "Task Category": "Data Analysis & Insights", "Task Subcategory": "Performance Analysis", "Time Allocation": 1.3, "Task Variability": 5.6, "Complexity Requirements": 5.1, "Creativity Requirements": 2.5, "Interpersonal Requirements": 2.9, "Physical Requirements": 1.1, "AI Exposure": "Medium", "Lower % Time Saved By AI": 0.144, "Mid % Time Saved By AI": 0.19, "Upper % Time Saved By AI": 0.255, "AI-Enabled Time Savings": 0.247, "Skill Mapping": "Performance Analysis; Data Interpretation"}, {"Task": "Coordinate pricing, quoting, and approvals", "Task Category": "Operations & Execution", "Task Subcategory": "Workflow Management", "Time Allocation": 2.8, "Task Variability": 4.4, "Complexity Requirements": 6.3, "Creativity Requirements": 2.8, "Interpersonal Requirements": 3.9, "Physical Requirements": 1.0, "AI Exposure": "Medium", "Lower % Time Saved By AI": 0.167, "Mid % Time Saved By AI": 0.198, "Upper % Time Saved By AI": 0.285, "AI-Enabled Time Savings": 0.554, "Skill Mapping": "Quote-to-Cash; Process Management"}, {"Task": "Support go-to-market process improvements", "Task Category": "Process Improvement & Change", "Task Subcategory": "Continuous Improvement", "Time Allocation": 2.3, "Task Variability": 3.9, "Complexity Requirements": 6.1, "Creativity Requirements": 6.2, "Interpersonal Requirements": 2.6, "Physical Requirements": 1.8, "AI Exposure": "High", "Lower % Time Saved By AI": 0.17, "Mid % Time Saved By AI": 0.225, "Upper % Time Saved By AI": 0.317, "AI-Enabled Time Savings": 0.517, "Skill Mapping": "Process Improvement; Change Management"}]}, {"role_id": "R01", "company": "Northstar Consumer Brands", "industry": "Consumer Products", "geography": "North America", "role": "Commercial Insights Manager", "function": "Commercial Strategy", "headcount": 220, "number_of_tasks": 4, "avg_time_allocation_per_task": 2.3, "avg_task_variability": 4.0, "avg_complexity": 6.58, "avg_creativity": 3.33, "avg_interpersonal": 5.53, "avg_physical": 1.32, "avg_lower_pct_saved": 0.132, "avg_mid_pct_saved": 0.178, "avg_upper_pct_saved": 0.247, "total_ai_enabled_time_savings": 1.63, "ai_enablement_potential": 0.178, "opportunity_score": 30.1, "risk_score": 41.7, "tasks": [{"Task": "Analyze demand, channel, and customer performance trends", "Task Category": "Market & Competitive Analysis", "Task Subcategory": "Demand Intelligence", "Time Allocation": 1.8, "Task Variability": 3.8, "Complexity Requirements": 6.9, "Creativity Requirements": 2.3, "Interpersonal Requirements": 4.9, "Physical Requirements": 1.4, "AI Exposure": "Medium", "Lower % Time Saved By AI": 0.114, "Mid % Time Saved By AI": 0.169, "Upper % Time Saved By AI": 0.221, "AI-Enabled Time Savings": 0.304, "Skill Mapping": "Data Analysis; Trend Identification"}, {"Task": "Prepare recurring dashboards and executive summaries", "Task Category": "Reporting, Documentation & Knowledge Management", "Task Subcategory": "Reporting", "Time Allocation": 2.0, "Task Variability": 3.3, "Complexity Requirements": 4.4, "Creativity Requirements": 3.9, "Interpersonal Requirements": 6.5, "Physical Requirements": 1.1, "AI Exposure": "Medium", "Lower % Time Saved By AI": 0.132, "Mid % Time Saved By AI": 0.193, "Upper % Time Saved By AI": 0.29, "AI-Enabled Time Savings": 0.386, "Skill Mapping": "Dashboarding; Executive Communication"}, {"Task": "Translate performance signals into actions and recommendations", "Task Category": "Strategy & Business Planning", "Task Subcategory": "Strategic Planning", "Time Allocation": 2.4, "Task Variability": 5.0, "Complexity Requirements": 8.4, "Creativity Requirements": 2.2, "Interpersonal Requirements": 6.7, "Physical Requirements": 1.3, "AI Exposure": "Medium", "Lower % Time Saved By AI": 0.146, "Mid % Time Saved By AI": 0.182, "Upper % Time Saved By AI": 0.247, "AI-Enabled Time Savings": 0.437, "Skill Mapping": "Recommendation Development; Decision Support"}, {"Task": "Coordinate stakeholders on priorities and delivery timing", "Task Category": "Communication & Stakeholder Management", "Task Subcategory": "Stakeholder Alignment", "Time Allocation": 3.0, "Task Variability": 3.9, "Complexity Requirements": 6.6, "Creativity Requirements": 4.9, "Interpersonal Requirements": 4.0, "Physical Requirements": 1.5, "AI Exposure": "Medium", "Lower % Time Saved By AI": 0.136, "Mid % Time Saved By AI": 0.169, "Upper % Time Saved By AI": 0.229, "AI-Enabled Time Savings": 0.507, "Skill Mapping": "Stakeholder Communication; Workflow Management"}]}, {"role_id": "R15", "company": "Harbor Financial Services", "industry": "Financial Services", "geography": "APAC", "role": "Digital Transformation Lead", "function": "Transformation", "headcount": 290, "number_of_tasks": 4, "avg_time_allocation_per_task": 2.0, "avg_task_variability": 5.08, "avg_complexity": 7.33, "avg_creativity": 3.7, "avg_interpersonal": 6.55, "avg_physical": 1.62, "avg_lower_pct_saved": 0.163, "avg_mid_pct_saved": 0.223, "avg_upper_pct_saved": 0.297, "total_ai_enabled_time_savings": 1.8, "ai_enablement_potential": 0.225, "opportunity_score": 38.9, "risk_score": 39.8, "tasks": [{"Task": "Identify automation opportunities in workflows", "Task Category": "Strategy & Business Planning", "Task Subcategory": "Workforce & Capacity Planning", "Time Allocation": 1.8, "Task Variability": 4.6, "Complexity Requirements": 7.8, "Creativity Requirements": 2.0, "Interpersonal Requirements": 6.1, "Physical Requirements": 1.8, "AI Exposure": "Medium", "Lower % Time Saved By AI": 0.102, "Mid % Time Saved By AI": 0.178, "Upper % Time Saved By AI": 0.264, "AI-Enabled Time Savings": 0.32, "Skill Mapping": "Automation Strategy; Process Analysis"}, {"Task": "Prioritize transformation use cases and pilots", "Task Category": "Strategy & Business Planning", "Task Subcategory": "Portfolio & Investment Planning", "Time Allocation": 3.2, "Task Variability": 4.4, "Complexity Requirements": 5.7, "Creativity Requirements": 3.8, "Interpersonal Requirements": 7.5, "Physical Requirements": 1.6, "AI Exposure": "High", "Lower % Time Saved By AI": 0.163, "Mid % Time Saved By AI": 0.214, "Upper % Time Saved By AI": 0.278, "AI-Enabled Time Savings": 0.685, "Skill Mapping": "Use Case Prioritization; Program Design"}, {"Task": "Coordinate delivery across technology and business teams", "Task Category": "Communication & Stakeholder Management", "Task Subcategory": "Stakeholder Alignment", "Time Allocation": 1.1, "Task Variability": 3.5, "Complexity Requirements": 7.8, "Creativity Requirements": 3.3, "Interpersonal Requirements": 7.1, "Physical Requirements": 1.2, "AI Exposure": "Medium", "Lower % Time Saved By AI": 0.144, "Mid % Time Saved By AI": 0.2, "Upper % Time Saved By AI": 0.259, "AI-Enabled Time Savings": 0.22, "Skill Mapping": "Change Management; Coordination"}, {"Task": "Measure adoption, benefits, and process change", "Task Category": "Reporting, Documentation & Knowledge Management", "Task Subcategory": "Performance Tracking", "Time Allocation": 1.9, "Task Variability": 7.8, "Complexity Requirements": 8.0, "Creativity Requirements": 5.7, "Interpersonal Requirements": 5.5, "Physical Requirements": 1.9, "AI Exposure": "High", "Lower % Time Saved By AI": 0.244, "Mid % Time Saved By AI": 0.301, "Upper % Time Saved By AI": 0.387, "AI-Enabled Time Savings": 0.572, "Skill Mapping": "Benefits Tracking; Measurement"}]}, {"role_id": "R03", "company": "Northstar Consumer Brands", "industry": "Consumer Products", "geography": "North America", "role": "Operations Excellence Manager", "function": "Operations", "headcount": 341, "number_of_tasks": 4, "avg_time_allocation_per_task": 1.93, "avg_task_variability": 4.78, "avg_complexity": 6.25, "avg_creativity": 3.35, "avg_interpersonal": 4.33, "avg_physical": 1.7, "avg_lower_pct_saved": 0.123, "avg_mid_pct_saved": 0.172, "avg_upper_pct_saved": 0.247, "total_ai_enabled_time_savings": 1.41, "ai_enablement_potential": 0.184, "opportunity_score": 32.4, "risk_score": 44.7, "tasks": [{"Task": "Monitor KPIs, throughput, and service levels", "Task Category": "Operations & Execution", "Task Subcategory": "Performance Monitoring", "Time Allocation": 1.1, "Task Variability": 5.3, "Complexity Requirements": 4.8, "Creativity Requirements": 2.5, "Interpersonal Requirements": 2.3, "Physical Requirements": 1.8, "AI Exposure": "Low", "Lower % Time Saved By AI": 0.085, "Mid % Time Saved By AI": 0.127, "Upper % Time Saved By AI": 0.197, "AI-Enabled Time Savings": 0.14, "Skill Mapping": "KPI Management; Reporting"}, {"Task": "Identify bottlenecks and improvement opportunities", "Task Category": "Process Improvement & Change", "Task Subcategory": "Continuous Improvement", "Time Allocation": 3.1, "Task Variability": 3.4, "Complexity Requirements": 6.0, "Creativity Requirements": 4.5, "Interpersonal Requirements": 6.9, "Physical Requirements": 1.8, "AI Exposure": "High", "Lower % Time Saved By AI": 0.178, "Mid % Time Saved By AI": 0.222, "Upper % Time Saved By AI": 0.293, "AI-Enabled Time Savings": 0.688, "Skill Mapping": "Process Improvement; Root Cause Analysis"}, {"Task": "Coordinate daily execution across teams and vendors", "Task Category": "Operations & Execution", "Task Subcategory": "Workflow Management", "Time Allocation": 1.9, "Task Variability": 7.4, "Complexity Requirements": 8.3, "Creativity Requirements": 2.7, "Interpersonal Requirements": 3.0, "Physical Requirements": 1.2, "AI Exposure": "Medium", "Lower % Time Saved By AI": 0.086, "Mid % Time Saved By AI": 0.14, "Upper % Time Saved By AI": 0.219, "AI-Enabled Time Savings": 0.266, "Skill Mapping": "Workflow Management; Coordination"}, {"Task": "Track issues, escalations, and resolution progress", "Task Category": "Operations & Execution", "Task Subcategory": "Issue Management", "Time Allocation": 1.6, "Task Variability": 3.0, "Complexity Requirements": 5.9, "Creativity Requirements": 3.7, "Interpersonal Requirements": 5.1, "Physical Requirements": 2.0, "AI Exposure": "Medium", "Lower % Time Saved By AI": 0.144, "Mid % Time Saved By AI": 0.2, "Upper % Time Saved By AI": 0.281, "AI-Enabled Time Savings": 0.32, "Skill Mapping": "Issue Management; Escalation Handling"}]}, {"role_id": "R07", "company": "Meridian Industrial Solutions", "industry": "Industrials", "geography": "EMEA", "role": "Supply Chain Planning Manager", "function": "Supply Chain", "headcount": 87, "number_of_tasks": 4, "avg_time_allocation_per_task": 2.5, "avg_task_variability": 5.75, "avg_complexity": 6.72, "avg_creativity": 5.17, "avg_interpersonal": 5.0, "avg_physical": 1.4, "avg_lower_pct_saved": 0.133, "avg_mid_pct_saved": 0.168, "avg_upper_pct_saved": 0.235, "total_ai_enabled_time_savings": 1.59, "ai_enablement_potential": 0.159, "opportunity_score": 28.0, "risk_score": 31.6, "tasks": [{"Task": "Track demand signals and supply plan assumptions", "Task Category": "Strategy & Business Planning", "Task Subcategory": "Forecasting & Scenario Planning", "Time Allocation": 1.1, "Task Variability": 4.1, "Complexity Requirements": 6.3, "Creativity Requirements": 5.4, "Interpersonal Requirements": 3.8, "Physical Requirements": 1.5, "AI Exposure": "High", "Lower % Time Saved By AI": 0.185, "Mid % Time Saved By AI": 0.218, "Upper % Time Saved By AI": 0.305, "AI-Enabled Time Savings": 0.24, "Skill Mapping": "Demand Planning; Forecasting"}, {"Task": "Coordinate supplier communications and service updates", "Task Category": "Communication & Stakeholder Management", "Task Subcategory": "Supplier Coordination", "Time Allocation": 3.2, "Task Variability": 6.3, "Complexity Requirements": 7.7, "Creativity Requirements": 4.3, "Interpersonal Requirements": 6.5, "Physical Requirements": 1.9, "AI Exposure": "Low", "Lower % Time Saved By AI": 0.089, "Mid % Time Saved By AI": 0.127, "Upper % Time Saved By AI": 0.203, "AI-Enabled Time Savings": 0.406, "Skill Mapping": "Supplier Management; Communication"}, {"Task": "Optimize inventory levels and replenishment plans", "Task Category": "Operations & Execution", "Task Subcategory": "Inventory Management", "Time Allocation": 3.1, "Task Variability": 6.9, "Complexity Requirements": 6.7, "Creativity Requirements": 5.5, "Interpersonal Requirements": 2.8, "Physical Requirements": 1.1, "AI Exposure": "Medium", "Lower % Time Saved By AI": 0.154, "Mid % Time Saved By AI": 0.19, "Upper % Time Saved By AI": 0.243, "AI-Enabled Time Savings": 0.589, "Skill Mapping": "Inventory Planning; Optimization"}, {"Task": "Escalate disruptions and resolve supply issues", "Task Category": "Operations & Execution", "Task Subcategory": "Issue Management", "Time Allocation": 2.6, "Task Variability": 5.7, "Complexity Requirements": 6.2, "Creativity Requirements": 5.5, "Interpersonal Requirements": 6.9, "Physical Requirements": 1.1, "AI Exposure": "Medium", "Lower % Time Saved By AI": 0.103, "Mid % Time Saved By AI": 0.135, "Upper % Time Saved By AI": 0.19, "AI-Enabled Time Savings": 0.351, "Skill Mapping": "Issue Resolution; Risk Management"}]}, {"role_id": "R16", "company": "Vector Logistics Group", "industry": "Logistics & Transportation", "geography": "Latin America", "role": "Customer Success Operations Manager", "function": "Customer Success", "headcount": 162, "number_of_tasks": 4, "avg_time_allocation_per_task": 1.73, "avg_task_variability": 4.95, "avg_complexity": 7.25, "avg_creativity": 3.98, "avg_interpersonal": 4.7, "avg_physical": 1.55, "avg_lower_pct_saved": 0.126, "avg_mid_pct_saved": 0.169, "avg_upper_pct_saved": 0.248, "total_ai_enabled_time_savings": 1.11, "ai_enablement_potential": 0.161, "opportunity_score": 29.6, "risk_score": 41.2, "tasks": [{"Task": "Monitor onboarding, retention, and service metrics", "Task Category": "Operations & Execution", "Task Subcategory": "Performance Monitoring", "Time Allocation": 2.5, "Task Variability": 3.7, "Complexity Requirements": 7.9, "Creativity Requirements": 4.2, "Interpersonal Requirements": 7.0, "Physical Requirements": 1.6, "AI Exposure": "Medium", "Lower % Time Saved By AI": 0.081, "Mid % Time Saved By AI": 0.132, "Upper % Time Saved By AI": 0.196, "AI-Enabled Time Savings": 0.33, "Skill Mapping": "Customer Success; KPI Management"}, {"Task": "Coordinate escalations and account issues", "Task Category": "Operations & Execution", "Task Subcategory": "Issue Management", "Time Allocation": 1.6, "Task Variability": 6.7, "Complexity Requirements": 6.9, "Creativity Requirements": 3.8, "Interpersonal Requirements": 3.3, "Physical Requirements": 1.5, "AI Exposure": "Medium", "Lower % Time Saved By AI": 0.161, "Mid % Time Saved By AI": 0.197, "Upper % Time Saved By AI": 0.279, "AI-Enabled Time Savings": 0.315, "Skill Mapping": "Case Management; Escalation Handling"}, {"Task": "Analyze usage trends and renewal signals", "Task Category": "Data Analysis & Insights", "Task Subcategory": "Insight Generation", "Time Allocation": 1.2, "Task Variability": 5.5, "Complexity Requirements": 7.7, "Creativity Requirements": 4.5, "Interpersonal Requirements": 4.5, "Physical Requirements": 1.3, "AI Exposure": "Medium", "Lower % Time Saved By AI": 0.158, "Mid % Time Saved By AI": 0.209, "Upper % Time Saved By AI": 0.286, "AI-Enabled Time Savings": 0.251, "Skill Mapping": "Customer Analytics; Trend Analysis"}, {"Task": "Document playbooks and enablement standards", "Task Category": "Reporting, Documentation & Knowledge Management", "Task Subcategory": "Documentation", "Time Allocation": 1.6, "Task Variability": 3.9, "Complexity Requirements": 6.5, "Creativity Requirements": 3.4, "Interpersonal Requirements": 4.0, "Physical Requirements": 1.8, "AI Exposure": "Medium", "Lower % Time Saved By AI": 0.105, "Mid % Time Saved By AI": 0.136, "Upper % Time Saved By AI": 0.23, "AI-Enabled Time Savings": 0.218, "Skill Mapping": "Documentation; Knowledge Management"}]}, {"role_id": "R11", "company": "Apex Retail Group", "industry": "Retail & eCommerce", "geography": "Europe", "role": "Customer Operations Manager", "function": "Customer Operations", "headcount": 101, "number_of_tasks": 4, "avg_time_allocation_per_task": 1.68, "avg_task_variability": 4.97, "avg_complexity": 6.28, "avg_creativity": 3.92, "avg_interpersonal": 3.7, "avg_physical": 1.27, "avg_lower_pct_saved": 0.113, "avg_mid_pct_saved": 0.169, "avg_upper_pct_saved": 0.263, "total_ai_enabled_time_savings": 1.11, "ai_enablement_potential": 0.166, "opportunity_score": 30.7, "risk_score": 41.4, "tasks": [{"Task": "Review service cases and escalation trends", "Task Category": "Operations & Execution", "Task Subcategory": "Issue Management", "Time Allocation": 1.5, "Task Variability": 4.1, "Complexity Requirements": 4.9, "Creativity Requirements": 6.0, "Interpersonal Requirements": 6.0, "Physical Requirements": 1.1, "AI Exposure": "High", "Lower % Time Saved By AI": 0.16, "Mid % Time Saved By AI": 0.239, "Upper % Time Saved By AI": 0.331, "AI-Enabled Time Savings": 0.358, "Skill Mapping": "Case Management; Escalation Handling"}, {"Task": "Monitor throughput, backlog, and response time", "Task Category": "Operations & Execution", "Task Subcategory": "Performance Monitoring", "Time Allocation": 1.0, "Task Variability": 6.1, "Complexity Requirements": 8.0, "Creativity Requirements": 3.9, "Interpersonal Requirements": 2.3, "Physical Requirements": 1.7, "AI Exposure": "Medium", "Lower % Time Saved By AI": 0.105, "Mid % Time Saved By AI": 0.16, "Upper % Time Saved By AI": 0.259, "AI-Enabled Time Savings": 0.16, "Skill Mapping": "Service Operations; KPI Management"}, {"Task": "Coordinate cross-team issue resolution", "Task Category": "Communication & Stakeholder Management", "Task Subcategory": "Stakeholder Alignment", "Time Allocation": 2.4, "Task Variability": 6.5, "Complexity Requirements": 4.2, "Creativity Requirements": 2.8, "Interpersonal Requirements": 3.5, "Physical Requirements": 1.0, "AI Exposure": "Medium", "Lower % Time Saved By AI": 0.111, "Mid % Time Saved By AI": 0.157, "Upper % Time Saved By AI": 0.256, "AI-Enabled Time Savings": 0.377, "Skill Mapping": "Stakeholder Communication; Coordination"}, {"Task": "Document learnings and standard operating procedures", "Task Category": "Reporting, Documentation & Knowledge Management", "Task Subcategory": "Documentation", "Time Allocation": 1.8, "Task Variability": 3.2, "Complexity Requirements": 8.0, "Creativity Requirements": 3.0, "Interpersonal Requirements": 3.0, "Physical Requirements": 1.3, "AI Exposure": "Low", "Lower % Time Saved By AI": 0.077, "Mid % Time Saved By AI": 0.121, "Upper % Time Saved By AI": 0.204, "AI-Enabled Time Savings": 0.218, "Skill Mapping": "Documentation; Knowledge Management"}]}, {"role_id": "R17", "company": "Vector Logistics Group", "industry": "Logistics & Transportation", "geography": "Latin America", "role": "Quality Assurance Manager", "function": "Quality & Control", "headcount": 147, "number_of_tasks": 4, "avg_time_allocation_per_task": 1.9, "avg_task_variability": 5.88, "avg_complexity": 5.62, "avg_creativity": 3.4, "avg_interpersonal": 4.95, "avg_physical": 1.4, "avg_lower_pct_saved": 0.061, "avg_mid_pct_saved": 0.133, "avg_upper_pct_saved": 0.213, "total_ai_enabled_time_savings": 1.03, "ai_enablement_potential": 0.135, "opportunity_score": 28.2, "risk_score": 32.1, "tasks": [{"Task": "Review outputs against quality standards", "Task Category": "Quality, Risk & Compliance", "Task Subcategory": "Quality Assurance", "Time Allocation": 1.9, "Task Variability": 4.7, "Complexity Requirements": 4.3, "Creativity Requirements": 3.2, "Interpersonal Requirements": 7.3, "Physical Requirements": 1.1, "AI Exposure": "Low", "Lower % Time Saved By AI": 0.059, "Mid % Time Saved By AI": 0.12, "Upper % Time Saved By AI": 0.213, "AI-Enabled Time Savings": 0.228, "Skill Mapping": "Quality Assurance; Control Testing"}, {"Task": "Track defects, rework, and root causes", "Task Category": "Data Analysis & Insights", "Task Subcategory": "Defect Analysis", "Time Allocation": 1.5, "Task Variability": 4.4, "Complexity Requirements": 5.1, "Creativity Requirements": 3.8, "Interpersonal Requirements": 4.5, "Physical Requirements": 2.0, "AI Exposure": "Medium", "Lower % Time Saved By AI": 0.088, "Mid % Time Saved By AI": 0.162, "Upper % Time Saved By AI": 0.213, "AI-Enabled Time Savings": 0.243, "Skill Mapping": "Root Cause Analysis; Data Interpretation"}, {"Task": "Support audit and compliance evidence requests", "Task Category": "Reporting, Documentation & Knowledge Management", "Task Subcategory": "Documentation", "Time Allocation": 1.1, "Task Variability": 6.5, "Complexity Requirements": 8.0, "Creativity Requirements": 4.1, "Interpersonal Requirements": 5.2, "Physical Requirements": 1.0, "AI Exposure": "Low", "Lower % Time Saved By AI": 0.031, "Mid % Time Saved By AI": 0.107, "Upper % Time Saved By AI": 0.198, "AI-Enabled Time Savings": 0.118, "Skill Mapping": "Audit Support; Documentation"}, {"Task": "Coordinate corrective actions and sustainment plans", "Task Category": "Communication & Stakeholder Management", "Task Subcategory": "Stakeholder Alignment", "Time Allocation": 3.1, "Task Variability": 7.9, "Complexity Requirements": 5.1, "Creativity Requirements": 2.5, "Interpersonal Requirements": 2.8, "Physical Requirements": 1.5, "AI Exposure": "Medium", "Lower % Time Saved By AI": 0.065, "Mid % Time Saved By AI": 0.142, "Upper % Time Saved By AI": 0.228, "AI-Enabled Time Savings": 0.44, "Skill Mapping": "Stakeholder Communication; Remediation"}]}, {"role_id": "R02", "company": "Northstar Consumer Brands", "industry": "Consumer Products", "geography": "North America", "role": "Finance & Forecasting Manager", "function": "Finance", "headcount": 232, "number_of_tasks": 4, "avg_time_allocation_per_task": 2.1, "avg_task_variability": 4.92, "avg_complexity": 6.0, "avg_creativity": 4.02, "avg_interpersonal": 4.17, "avg_physical": 1.5, "avg_lower_pct_saved": 0.086, "avg_mid_pct_saved": 0.145, "avg_upper_pct_saved": 0.225, "total_ai_enabled_time_savings": 1.23, "ai_enablement_potential": 0.146, "opportunity_score": 26.9, "risk_score": 38.3, "tasks": [{"Task": "Reconcile monthly results and validate performance reports", "Task Category": "Reporting, Documentation & Knowledge Management", "Task Subcategory": "Reporting", "Time Allocation": 2.1, "Task Variability": 7.6, "Complexity Requirements": 5.6, "Creativity Requirements": 3.1, "Interpersonal Requirements": 3.0, "Physical Requirements": 1.8, "AI Exposure": "Low", "Lower % Time Saved By AI": 0.076, "Mid % Time Saved By AI": 0.121, "Upper % Time Saved By AI": 0.196, "AI-Enabled Time Savings": 0.254, "Skill Mapping": "Financial Controls; Data Validation"}, {"Task": "Build forecasts and scenario updates for leadership", "Task Category": "Strategy & Business Planning", "Task Subcategory": "Forecasting & Scenario Planning", "Time Allocation": 1.8, "Task Variability": 5.2, "Complexity Requirements": 6.7, "Creativity Requirements": 2.3, "Interpersonal Requirements": 4.8, "Physical Requirements": 1.2, "AI Exposure": "Medium", "Lower % Time Saved By AI": 0.077, "Mid % Time Saved By AI": 0.154, "Upper % Time Saved By AI": 0.225, "AI-Enabled Time Savings": 0.277, "Skill Mapping": "Forecasting; Scenario Analysis"}, {"Task": "Investigate variance drivers and explain performance changes", "Task Category": "Data Analysis & Insights", "Task Subcategory": "Variance Analysis", "Time Allocation": 3.3, "Task Variability": 3.4, "Complexity Requirements": 6.5, "Creativity Requirements": 5.6, "Interpersonal Requirements": 6.5, "Physical Requirements": 1.3, "AI Exposure": "Medium", "Lower % Time Saved By AI": 0.101, "Mid % Time Saved By AI": 0.156, "Upper % Time Saved By AI": 0.246, "AI-Enabled Time Savings": 0.515, "Skill Mapping": "Root Cause Analysis; Data Interpretation"}, {"Task": "Coordinate budget owners on assumptions, timing, and approvals", "Task Category": "Communication & Stakeholder Management", "Task Subcategory": "Stakeholder Alignment", "Time Allocation": 1.2, "Task Variability": 3.5, "Complexity Requirements": 5.2, "Creativity Requirements": 5.1, "Interpersonal Requirements": 2.4, "Physical Requirements": 1.7, "AI Exposure": "Medium", "Lower % Time Saved By AI": 0.091, "Mid % Time Saved By AI": 0.15, "Upper % Time Saved By AI": 0.234, "AI-Enabled Time Savings": 0.18, "Skill Mapping": "Budget Management; Stakeholder Communication"}]}, {"role_id": "R04", "company": "Orion Health Systems", "industry": "Healthcare", "geography": "North America", "role": "Workforce Planning Manager", "function": "People & Talent", "headcount": 165, "number_of_tasks": 4, "avg_time_allocation_per_task": 1.45, "avg_task_variability": 4.35, "avg_complexity": 5.0, "avg_creativity": 3.93, "avg_interpersonal": 3.98, "avg_physical": 1.27, "avg_lower_pct_saved": 0.083, "avg_mid_pct_saved": 0.135, "avg_upper_pct_saved": 0.194, "total_ai_enabled_time_savings": 0.74, "ai_enablement_potential": 0.127, "opportunity_score": 25.7, "risk_score": 37.1, "tasks": [{"Task": "Assess workforce demand, capacity, and coverage needs", "Task Category": "Strategy & Business Planning", "Task Subcategory": "Workforce & Capacity Planning", "Time Allocation": 1.9, "Task Variability": 5.0, "Complexity Requirements": 4.5, "Creativity Requirements": 4.9, "Interpersonal Requirements": 2.3, "Physical Requirements": 1.1, "AI Exposure": "Low", "Lower % Time Saved By AI": 0.047, "Mid % Time Saved By AI": 0.085, "Upper % Time Saved By AI": 0.152, "AI-Enabled Time Savings": 0.162, "Skill Mapping": "Workforce Planning; Capacity Modeling"}, {"Task": "Review staffing scenarios and future skill requirements", "Task Category": "Strategy & Business Planning", "Task Subcategory": "Workforce & Capacity Planning", "Time Allocation": 1.1, "Task Variability": 3.0, "Complexity Requirements": 4.7, "Creativity Requirements": 2.5, "Interpersonal Requirements": 4.0, "Physical Requirements": 1.0, "AI Exposure": "Medium", "Lower % Time Saved By AI": 0.104, "Mid % Time Saved By AI": 0.165, "Upper % Time Saved By AI": 0.222, "AI-Enabled Time Savings": 0.182, "Skill Mapping": "Scenario Planning; Talent Strategy"}, {"Task": "Support manager reviews and talent planning discussions", "Task Category": "People Leadership & Talent Management", "Task Subcategory": "Talent Management", "Time Allocation": 1.6, "Task Variability": 4.7, "Complexity Requirements": 5.6, "Creativity Requirements": 2.6, "Interpersonal Requirements": 6.7, "Physical Requirements": 2.0, "AI Exposure": "Low", "Lower % Time Saved By AI": 0.062, "Mid % Time Saved By AI": 0.116, "Upper % Time Saved By AI": 0.17, "AI-Enabled Time Savings": 0.186, "Skill Mapping": "Coaching; Talent Review"}, {"Task": "Track workforce metrics and planning assumptions", "Task Category": "Reporting, Documentation & Knowledge Management", "Task Subcategory": "Reporting", "Time Allocation": 1.2, "Task Variability": 4.7, "Complexity Requirements": 5.2, "Creativity Requirements": 5.7, "Interpersonal Requirements": 2.9, "Physical Requirements": 1.0, "AI Exposure": "Medium", "Lower % Time Saved By AI": 0.118, "Mid % Time Saved By AI": 0.174, "Upper % Time Saved By AI": 0.231, "AI-Enabled Time Savings": 0.209, "Skill Mapping": "Workforce Analytics; Data Governance"}]}, {"role_id": "R05", "company": "Orion Health Systems", "industry": "Healthcare", "geography": "North America", "role": "Risk & Compliance Manager", "function": "Risk & Compliance", "headcount": 30, "number_of_tasks": 4, "avg_time_allocation_per_task": 2.08, "avg_task_variability": 6.12, "avg_complexity": 6.03, "avg_creativity": 6.05, "avg_interpersonal": 4.95, "avg_physical": 1.43, "avg_lower_pct_saved": 0.05, "avg_mid_pct_saved": 0.098, "avg_upper_pct_saved": 0.175, "total_ai_enabled_time_savings": 0.83, "ai_enablement_potential": 0.1, "opportunity_score": 17.0, "risk_score": 28.2, "tasks": [{"Task": "Monitor policy adherence and control effectiveness", "Task Category": "Quality, Risk & Compliance", "Task Subcategory": "Regulatory Compliance", "Time Allocation": 1.7, "Task Variability": 6.2, "Complexity Requirements": 4.4, "Creativity Requirements": 5.8, "Interpersonal Requirements": 4.9, "Physical Requirements": 1.9, "AI Exposure": "Low", "Lower % Time Saved By AI": 0.062, "Mid % Time Saved By AI": 0.103, "Upper % Time Saved By AI": 0.18, "AI-Enabled Time Savings": 0.175, "Skill Mapping": "Risk Monitoring; Policy Management"}, {"Task": "Review exceptions, incidents, and remediation actions", "Task Category": "Quality, Risk & Compliance", "Task Subcategory": "Risk Management", "Time Allocation": 2.2, "Task Variability": 6.2, "Complexity Requirements": 6.8, "Creativity Requirements": 5.5, "Interpersonal Requirements": 6.2, "Physical Requirements": 1.2, "AI Exposure": "Low", "Lower % Time Saved By AI": 0.039, "Mid % Time Saved By AI": 0.089, "Upper % Time Saved By AI": 0.179, "AI-Enabled Time Savings": 0.196, "Skill Mapping": "Exception Handling; Root Cause Analysis"}, {"Task": "Document audit evidence and compliance findings", "Task Category": "Reporting, Documentation & Knowledge Management", "Task Subcategory": "Documentation", "Time Allocation": 1.5, "Task Variability": 5.5, "Complexity Requirements": 7.3, "Creativity Requirements": 6.5, "Interpersonal Requirements": 6.3, "Physical Requirements": 1.5, "AI Exposure": "Low", "Lower % Time Saved By AI": 0.03, "Mid % Time Saved By AI": 0.083, "Upper % Time Saved By AI": 0.15, "AI-Enabled Time Savings": 0.124, "Skill Mapping": "Documentation; Audit Support"}, {"Task": "Coordinate remediation plans with business owners", "Task Category": "Communication & Stakeholder Management", "Task Subcategory": "Stakeholder Alignment", "Time Allocation": 2.9, "Task Variability": 6.6, "Complexity Requirements": 5.6, "Creativity Requirements": 6.4, "Interpersonal Requirements": 2.4, "Physical Requirements": 1.1, "AI Exposure": "Low", "Lower % Time Saved By AI": 0.069, "Mid % Time Saved By AI": 0.116, "Upper % Time Saved By AI": 0.19, "AI-Enabled Time Savings": 0.336, "Skill Mapping": "Stakeholder Communication; Issue Tracking"}]}, {"role_id": "R18", "company": "Vector Logistics Group", "industry": "Logistics & Transportation", "geography": "Latin America", "role": "People & Capability Lead", "function": "People & Capability", "headcount": 156, "number_of_tasks": 4, "avg_time_allocation_per_task": 1.4, "avg_task_variability": 5.72, "avg_complexity": 6.7, "avg_creativity": 2.62, "avg_interpersonal": 3.9, "avg_physical": 1.65, "avg_lower_pct_saved": 0.061, "avg_mid_pct_saved": 0.114, "avg_upper_pct_saved": 0.191, "total_ai_enabled_time_savings": 0.61, "ai_enablement_potential": 0.108, "opportunity_score": 24.0, "risk_score": 32.3, "tasks": [{"Task": "Assess capability gaps and workforce needs", "Task Category": "Strategy & Business Planning", "Task Subcategory": "Workforce & Capacity Planning", "Time Allocation": 1.2, "Task Variability": 6.9, "Complexity Requirements": 4.0, "Creativity Requirements": 2.6, "Interpersonal Requirements": 5.1, "Physical Requirements": 1.0, "AI Exposure": "Medium", "Lower % Time Saved By AI": 0.068, "Mid % Time Saved By AI": 0.146, "Upper % Time Saved By AI": 0.227, "AI-Enabled Time Savings": 0.175, "Skill Mapping": "Capability Planning; Workforce Strategy"}, {"Task": "Support learning priorities and development planning", "Task Category": "People Leadership & Talent Management", "Task Subcategory": "Talent Management", "Time Allocation": 2.3, "Task Variability": 5.2, "Complexity Requirements": 7.4, "Creativity Requirements": 2.4, "Interpersonal Requirements": 3.7, "Physical Requirements": 1.9, "AI Exposure": "Low", "Lower % Time Saved By AI": 0.04, "Mid % Time Saved By AI": 0.083, "Upper % Time Saved By AI": 0.173, "AI-Enabled Time Savings": 0.191, "Skill Mapping": "Learning Strategy; Talent Development"}, {"Task": "Coordinate succession, mobility, and role transitions", "Task Category": "People Leadership & Talent Management", "Task Subcategory": "Talent Management", "Time Allocation": 1.0, "Task Variability": 5.7, "Complexity Requirements": 8.5, "Creativity Requirements": 3.3, "Interpersonal Requirements": 3.7, "Physical Requirements": 1.8, "AI Exposure": "Low", "Lower % Time Saved By AI": 0.033, "Mid % Time Saved By AI": 0.089, "Upper % Time Saved By AI": 0.166, "AI-Enabled Time Savings": 0.089, "Skill Mapping": "Career Pathing; Mobility Planning"}, {"Task": "Track people metrics and development progress", "Task Category": "Reporting, Documentation & Knowledge Management", "Task Subcategory": "Reporting", "Time Allocation": 1.1, "Task Variability": 5.1, "Complexity Requirements": 6.9, "Creativity Requirements": 2.2, "Interpersonal Requirements": 3.1, "Physical Requirements": 1.9, "AI Exposure": "Medium", "Lower % Time Saved By AI": 0.104, "Mid % Time Saved By AI": 0.138, "Upper % Time Saved By AI": 0.199, "AI-Enabled Time Savings": 0.152, "Skill Mapping": "People Analytics; Reporting"}]}, {"role_id": "R09", "company": "Meridian Industrial Solutions", "industry": "Industrials", "geography": "EMEA", "role": "Procurement Manager", "function": "Procurement", "headcount": 96, "number_of_tasks": 4, "avg_time_allocation_per_task": 2.32, "avg_task_variability": 5.92, "avg_complexity": 5.55, "avg_creativity": 4.7, "avg_interpersonal": 3.77, "avg_physical": 1.73, "avg_lower_pct_saved": 0.043, "avg_mid_pct_saved": 0.103, "avg_upper_pct_saved": 0.171, "total_ai_enabled_time_savings": 0.94, "ai_enablement_potential": 0.101, "opportunity_score": 22.3, "risk_score": 27.1, "tasks": [{"Task": "Review supplier performance and sourcing needs", "Task Category": "Operations & Execution", "Task Subcategory": "Supplier Management", "Time Allocation": 3.4, "Task Variability": 5.0, "Complexity Requirements": 5.9, "Creativity Requirements": 3.6, "Interpersonal Requirements": 2.5, "Physical Requirements": 1.4, "AI Exposure": "Low", "Lower % Time Saved By AI": 0.048, "Mid % Time Saved By AI": 0.101, "Upper % Time Saved By AI": 0.186, "AI-Enabled Time Savings": 0.343, "Skill Mapping": "Supplier Management; Negotiation"}, {"Task": "Analyze spend, pricing, and category trends", "Task Category": "Data Analysis & Insights", "Task Subcategory": "Spend Analysis", "Time Allocation": 1.9, "Task Variability": 5.6, "Complexity Requirements": 5.3, "Creativity Requirements": 6.3, "Interpersonal Requirements": 2.6, "Physical Requirements": 1.9, "AI Exposure": "Low", "Lower % Time Saved By AI": 0.03, "Mid % Time Saved By AI": 0.087, "Upper % Time Saved By AI": 0.141, "AI-Enabled Time Savings": 0.165, "Skill Mapping": "Spend Analysis; Data Interpretation"}, {"Task": "Support sourcing events and commercial decisions", "Task Category": "Strategy & Business Planning", "Task Subcategory": "Portfolio & Investment Planning", "Time Allocation": 1.7, "Task Variability": 7.5, "Complexity Requirements": 4.8, "Creativity Requirements": 5.4, "Interpersonal Requirements": 6.5, "Physical Requirements": 1.8, "AI Exposure": "Medium", "Lower % Time Saved By AI": 0.064, "Mid % Time Saved By AI": 0.141, "Upper % Time Saved By AI": 0.211, "AI-Enabled Time Savings": 0.24, "Skill Mapping": "Sourcing Strategy; Commercial Analysis"}, {"Task": "Coordinate contract updates and stakeholder approvals", "Task Category": "Communication & Stakeholder Management", "Task Subcategory": "Stakeholder Alignment", "Time Allocation": 2.3, "Task Variability": 5.6, "Complexity Requirements": 6.2, "Creativity Requirements": 3.5, "Interpersonal Requirements": 3.5, "Physical Requirements": 1.8, "AI Exposure": "Low", "Lower % Time Saved By AI": 0.03, "Mid % Time Saved By AI": 0.082, "Upper % Time Saved By AI": 0.145, "AI-Enabled Time Savings": 0.189, "Skill Mapping": "Contract Management; Communication"}]}];
+
+const state = {
+  company: "All",
+  industry: "All",
+  function: "All",
+  role: "All",
+  selectedRoleId: null,
+};
+
+const nf = new Intl.NumberFormat('en-US');
+const pct = (v) => `${(v).toFixed(1)}%`;
+const hrs = (v) => `${(v).toFixed(1)} hrs`;
+
+function uniqueValues(key) {
+  return [...new Set(portfolioData.map(d => d[key]))].sort((a,b) => a.localeCompare(b));
+}
+
+function populateFilters() {
+  const filters = [
+    ["companyFilter", "company"],
+    ["industryFilter", "industry"],
+    ["functionFilter", "function"],
+    ["roleFilter", "role"],
+  ];
+  filters.forEach(([id, key]) => {
+    const sel = document.getElementById(id);
+    const options = ["All", ...uniqueValues(key)];
+    sel.innerHTML = options.map(o => `<option value="${o}">${o}</option>`).join("");
+    sel.addEventListener("change", () => {
+      state[key] = sel.value;
+      render();
+    });
+  });
+}
+
+function filteredData() {
+  return portfolioData.filter(d =>
+    (state.company === "All" || d.company === state.company) &&
+    (state.industry === "All" || d.industry === state.industry) &&
+    (state.function === "All" || d.function === state.function) &&
+    (state.role === "All" || d.role === state.role)
+  );
+}
+
+function aggregateBy(items, key) {
+  const groups = new Map();
+  items.forEach(d => {
+    const k = d[key];
+    if (!groups.has(k)) groups.set(k, []);
+    groups.get(k).push(d);
+  });
+  return [...groups.entries()].map(([name, arr]) => {
+    const headcount = arr.reduce((s,d)=>s+d.headcount,0);
+    const opp = arr.reduce((s,d)=>s+d.opportunity_score*d.headcount,0)/headcount;
+    const risk = arr.reduce((s,d)=>s+d.risk_score*d.headcount,0)/headcount;
+    const savings = arr.reduce((s,d)=>s+d.total_ai_enabled_time_savings*d.headcount,0);
+    return { name, headcount, opportunity: opp, risk, savings };
+  }).sort((a,b) => b.opportunity - a.opportunity);
+}
+
+function setKPIs(data) {
+  const totalHeadcount = data.reduce((s,d)=>s+d.headcount,0);
+  const avgOpp = data.reduce((s,d)=>s+d.opportunity_score*d.headcount,0)/Math.max(totalHeadcount,1);
+  const avgRisk = data.reduce((s,d)=>s+d.risk_score*d.headcount,0)/Math.max(totalHeadcount,1);
+  const kpis = [
+    ["Companies in view", [...new Set(data.map(d=>d.company))].length, "portfolio companies"],
+    ["Roles in view", data.length, "role families"],
+    ["Employees represented", nf.format(totalHeadcount), "headcount across filtered portfolio"],
+    ["Avg AI Opportunity", pct(avgOpp), "weighted by headcount"],
+    ["Avg AI Risk", pct(avgRisk), "weighted by headcount"],
+  ];
+
+  document.getElementById("kpiGrid").innerHTML = kpis.map(([label, value, sub]) => `
+    <div class="kpi">
+      <div class="label">${label}</div>
+      <div class="value">${value}</div>
+      <div class="sub">${sub}</div>
+    </div>
+  `).join("");
+}
+
+function barHTML(items, metric, maxVal, colorClass, fmt) {
+  if (!items.length) return '<div class="subtitle">No records match the selected filters.</div>';
+  return items.slice(0, 5).map((d) => {
+    const width = Math.max(6, (d[metric] / Math.max(maxVal, 1)) * 100);
+    return `
+      <div class="bar-row">
+        <div class="bar-label">${d.name}</div>
+        <div class="bar-track"><div class="bar-fill ${colorClass}" style="width:${width}%"></div></div>
+        <div class="bar-value">${fmt(d[metric])}</div>
+      </div>`;
+  }).join("");
+}
+
+function renderCharts(data) {
+  const companyAgg = aggregateBy(data, "company");
+  const functionAgg = aggregateBy(data, "function");
+  const maxOpp = Math.max(...companyAgg.map(d=>d.opportunity), 1);
+  const maxRisk = Math.max(...functionAgg.map(d=>d.risk), 1);
+
+  document.getElementById("companyOpportunityBars").innerHTML = barHTML(
+    companyAgg, "opportunity", maxOpp, "", v => pct(v)
+  );
+  document.getElementById("functionRiskBars").innerHTML = barHTML(
+    functionAgg, "risk", maxRisk, "risk", v => pct(v)
+  );
+}
+
+function renderRoleTable(data) {
+  const tbody = document.querySelector("#roleTable tbody");
+  if (!data.length) {
+    tbody.innerHTML = `<tr><td colspan="9" style="padding:18px;color:#64748b;">No records match the selected filters.</td></tr>`;
+    document.getElementById("detailPanel").innerHTML = `<div class="subtitle">No role is available for the current filter combination.</div>`;
+    return;
+  }
+
+  data = [...data].sort((a,b)=> b.opportunity_score - a.opportunity_score);
+
+  if (!state.selectedRoleId || !data.some(d => d.role_id === state.selectedRoleId)) {
+    state.selectedRoleId = data[0].role_id;
+  }
+
+  tbody.innerHTML = data.map(d => {
+    const selected = d.role_id === state.selectedRoleId ? "selected" : "";
+    const oppClass = d.opportunity_score >= 45 ? "green" : d.opportunity_score >= 30 ? "amber" : "blue";
+    const riskClass = d.risk_score >= 60 ? "red" : d.risk_score >= 40 ? "amber" : "blue";
+    return `
+      <tr class="${selected}" data-role="${d.role_id}">
+        <td><strong>${d.role}</strong><div class="subtitle">${d.function}</div></td>
+        <td>${d.company}</td>
+        <td>${d.industry}</td>
+        <td>${d.function}</td>
+        <td>${nf.format(d.headcount)}</td>
+        <td><span class="pill ${oppClass}">${pct(d.opportunity_score)}</span></td>
+        <td><span class="pill ${riskClass}">${pct(d.risk_score)}</span></td>
+        <td>${hrs(d.total_ai_enabled_time_savings * d.headcount)}</td>
+        <td>${d.number_of_tasks}</td>
+      </tr>`;
+  }).join("");
+
+  tbody.querySelectorAll("tr").forEach(row => {
+    row.addEventListener("click", () => {
+      state.selectedRoleId = row.dataset.role;
+      render();
+    });
+  });
+}
+
+function summarizeRole(role) {
+  const highImpactTasks = role.tasks.filter(t => t["AI Exposure"] !== "Low").length;
+  const topTasks = [...role.tasks].sort((a,b)=>b["AI-Enabled Time Savings"] - a["AI-Enabled Time Savings"]).slice(0, 2);
+  return `
+    <div class="detail-title">
+      <div>
+        <h3>${role.role}</h3>
+        <div class="meta">
+          ${role.company} · ${role.industry} · ${role.function}<br/>
+          ${nf.format(role.headcount)} employees represented
+        </div>
+      </div>
+      <div class="pill ${role.opportunity_score >= 45 ? 'green' : role.opportunity_score >= 30 ? 'amber' : 'blue'}">
+        Opportunity ${pct(role.opportunity_score)}
+      </div>
+    </div>
+
+    <div class="mini-kpis">
+      <div class="mini"><div class="l">Headcount</div><div class="v">${nf.format(role.headcount)}</div></div>
+      <div class="mini"><div class="l">AI Risk</div><div class="v">${pct(role.risk_score)}</div></div>
+      <div class="mini"><div class="l">Total AI Savings</div><div class="v">${hrs(role.total_ai_enabled_time_savings)}</div></div>
+      <div class="mini"><div class="l">Tasks with AI Exposure</div><div class="v">${highImpactTasks} / ${role.number_of_tasks}</div></div>
+    </div>
+
+    <div class="panel" style="border-radius:16px;">
+      <div class="panel-header">
+        <h2>Role-Level Metrics</h2>
+        <div class="desc">The metrics below mirror the role-rollup view from the deliverable and can be filtered by company, industry, function, or role.</div>
+      </div>
+      <div class="panel-body">
+        <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;">
+          <div class="mini"><div class="l">Avg Time Allocation / Task</div><div class="v">${hrs(role.avg_time_allocation_per_task)}</div></div>
+          <div class="mini"><div class="l">Avg Task Variability</div><div class="v">${role.avg_task_variability.toFixed(1)}</div></div>
+          <div class="mini"><div class="l">AI Enablement Potential</div><div class="v">${pct(role.ai_enablement_potential * 100)}</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:12px;">
+          <div class="mini"><div class="l">Complexity</div><div class="v">${role.avg_complexity.toFixed(1)}</div></div>
+          <div class="mini"><div class="l">Creativity</div><div class="v">${role.avg_creativity.toFixed(1)}</div></div>
+          <div class="mini"><div class="l">Interpersonal</div><div class="v">${role.avg_interpersonal.toFixed(1)}</div></div>
+          <div class="mini"><div class="l">Physical</div><div class="v">${role.avg_physical.toFixed(1)}</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" style="border-radius:16px;">
+      <div class="panel-header">
+        <h2>Top Task Signals</h2>
+        <div class="desc">Tasks are sorted below by AI-enabled time savings. These are the individual work activities driving the role-level score.</div>
+      </div>
+      <div class="panel-body">
+        <div style="display:grid;gap:10px;">
+          ${topTasks.map(t => `
+            <div style="padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:#fbfdff;">
+              <div style="font-weight:700">${t["Task"]}</div>
+              <div class="subtitle" style="margin-top:4px;">${t["Task Category"]} · ${t["Task Subcategory"]}</div>
+            </div>`).join("")}
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" style="border-radius:16px;">
+      <div class="panel-header">
+        <h2>Task-Level Drill-Down</h2>
+        <div class="desc">This table shows how each task contributes to the role-level result.</div>
+      </div>
+      <div class="panel-body">
+        <div class="table-wrap" style="max-height: 420px;">
+          <table class="task-table">
+            <thead>
+              <tr>
+                <th>Task</th>
+                <th>Category</th>
+                <th>Time</th>
+                <th>AI Exposure</th>
+                <th>Mid % Saved</th>
+                <th>AI-Enabled Savings</th>
+                <th>Skills</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${role.tasks.sort((a,b)=>b["AI-Enabled Time Savings"] - a["AI-Enabled Time Savings"]).map(t => `
+                <tr>
+                  <td style="min-width:250px;"><strong>${t["Task"]}</strong></td>
+                  <td>${t["Task Category"]}<div class="subtitle">${t["Task Subcategory"]}</div></td>
+                  <td>${hrs(t["Time Allocation"])}</td>
+                  <td><span class="pill ${t["AI Exposure"] === "High" ? "red" : (t["AI Exposure"] === "Medium" ? "amber" : "blue")}">${t["AI Exposure"]}</span></td>
+                  <td>${pct(t["Mid % Time Saved By AI"] * 100)}</td>
+                  <td>
+                    <div class="impact">
+                      <div class="meter"><span style="width:${Math.max(8, Math.min(100, t["Mid % Time Saved By AI"] * 420))}%"></span></div>
+                      <div style="min-width:64px;font-weight:700;">${hrs(t["AI-Enabled Time Savings"])}</div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="skill-tags">
+                      ${String(t["Skill Mapping"]).split(";").map(s => `<span>${s.trim()}</span>`).join("")}
+                    </div>
+                  </td>
+                </tr>`).join("")}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderDetail(data) {
+  const role = data.find(d => d.role_id === state.selectedRoleId) || data[0];
+  if (!role) {
+    document.getElementById("detailPanel").innerHTML = `<div class="subtitle">No role is available for the current filter combination.</div>`;
+    return;
+  }
+  document.getElementById("detailPanel").innerHTML = summarizeRole(role);
+}
+
+function render() {
+  const data = filteredData();
+  setKPIs(data);
+  renderCharts(data);
+  renderRoleTable(data);
+  renderDetail(data);
+}
+
+populateFilters();
+render();
+</script>
+</body>
+</html>
